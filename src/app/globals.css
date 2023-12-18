@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 240 10% 3.9%;
+
+        --card: 0 0% 100%;
+        --card-foreground: 240 10% 3.9%;
+
+        --popover: 0 0% 100%;
+        --popover-foreground: 240 10% 3.9%;
+
+        --primary: 240 5.9% 10%;
+        --primary-foreground: 0 0% 98%;
+
+        --secondary: 240 4.8% 95.9%;
+        --secondary-foreground: 240 5.9% 10%;
+
+        --muted: 240 4.8% 95.9%;
+        --muted-foreground: 240 3.8% 46.1%;
+
+        --accent: 240 4.8% 95.9%;
+        --accent-foreground: 240 5.9% 10%;
+
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 98%;
+
+        --border: 240 5.9% 90%;
+        --input: 240 5.9% 90%;
+        --ring: 240 10% 3.9%;
+
+        --radius: 0.5rem;
+    }
+
+    .dark {
+        --background: 240 10% 3.9%;
+        --foreground: 0 0% 98%;
+
+        --card: 240 10% 3.9%;
+        --card-foreground: 0 0% 98%;
+
+        --popover: 240 10% 3.9%;
+        --popover-foreground: 0 0% 98%;
+
+        --primary: 0 0% 98%;
+        --primary-foreground: 240 5.9% 10%;
+
+        --secondary: 240 3.7% 15.9%;
+        --secondary-foreground: 0 0% 98%;
+
+        --muted: 240 3.7% 15.9%;
+        --muted-foreground: 240 5% 64.9%;
+
+        --accent: 240 3.7% 15.9%;
+        --accent-foreground: 0 0% 98%;
+
+        --destructive: 0 62.8% 30.6%;
+        --destructive-foreground: 0 0% 98%;
+
+        --border: 240 3.7% 15.9%;
+        --input: 240 3.7% 15.9%;
+        --ring: 240 4.9% 83.9%;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+
+/* LAYOUT */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    overflow-x: hidden;
+    background-color: #1f1f1f;
+    color: #fff;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: none;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #e4e4e7;
+    border-radius: 10px;
+}
+
+/* For Firefox */
+::-moz-selection {
+    background-color: #e0e7ff;
+    color: #000;
+}
+
+/* For other browsers */
+::selection {
+    background-color: #e0e7ff;
+    color: #000;
+}
+
+body {
+    letter-spacing: 0.03rem;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+.container {
+    @apply flex flex-col min-h-screen w-[850px]
+}
+
+.content-container {
+    @apply flex flex-grow text-lg mt-20 md:mt-5
+}
+
+.content {
+    @apply w-full mb-64
+}
+
+.markdown-body {
+    @apply w-[850px]
+}
+
+.navbar {
+    background-color: #1f1f1f;
+    /* color: #FA6608; */
+    @apply flex justify-between items-center w-full py-8 z-40 font-bold
+}
+
+.footer {
+    background-color: #1f1f1f;
+    @apply fixed bottom-0 w-96 z-40 mt-10 w-[850px] pb-4
+}
+
+.input-box {
+    @apply min-h-[140px] w-full resize-none overflow-x-auto bg-zinc-800 p-6 px-8 text-lg border-none outline-none border-0 shadow-2xl shadow-orange-400/30 placeholder:text-muted-foreground
+}
+
+
+.msg {
+    @apply flex items-center relative mb-10 w-[850px] break-words
+}
+
+.avatar {
+    @apply rounded-full p-2 bg-zinc-800 absolute -left-16 top-2
+}
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
+
+.coder-boi {
+    font-family: 'JetBrains Mono', monospace;
+}

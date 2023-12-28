@@ -2,7 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dracula, oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import gfm from 'remark-gfm';
 import math from 'remark-math';
 import { InlineMath, BlockMath } from 'react-katex';
@@ -11,7 +11,7 @@ import '../app/dark_dimmed.css';
 
 
 
-const BotMsg = ({ message }) => {
+const BotMarkdown = ({ message }) => {
     return (
         <div className="markdown-body">
             <ReactMarkdown
@@ -45,4 +45,4 @@ const BotMsg = ({ message }) => {
     )
 }
 
-export { BotMsg }
+export { BotMarkdown }

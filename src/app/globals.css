@@ -79,16 +79,150 @@
 
 
 /* LAYOUT */
-html,
-body {
-    margin: 0;
-    padding: 0;
-    font-size: 14px;
-    overflow-x: hidden;
-    background-color: #1f1f1f;
+
+* {
     color: #fff;
 }
 
+html,
+body {
+    height: 95%;
+    width: 100%;
+    margin: 0;
+    background-color: #1f1f1f;
+    color: #fff;
+    font-size: 14px;
+}
+
+
+.mosaic.mosaic-blueprint-theme {
+    background: #1f1f1f !important;
+}
+
+.mosaic-window {
+    @apply border border-zinc-500 relative !important;
+}
+
+.mosaic-window-body {
+    background: #1f1f1f !important;
+}
+
+.mosaic-window-toolbar {
+    @apply bg-zinc-500 text-white !important;
+}
+
+.mosaic-window-title {
+    @apply text-white !important;
+}
+
+/* -------------------------------------------- */
+#app,
+.chatui {
+    @apply flex;
+    width: 100%;
+    padding: 0;
+    background-color: #1f1f1f;
+    color: #fff;
+    height: 900px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+body {
+    letter-spacing: 0.03rem;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+.container {
+    @apply flex flex-col w-full;
+}
+
+.content-container {
+    @apply flex flex-grow text-lg mt-20 md:mt-5
+}
+
+.content {
+    @apply w-full mb-[340px]
+}
+
+.navbar {
+    background-color: #1f1f1f;
+    @apply flex justify-between items-center w-full py-8 z-40 font-bold
+}
+
+.footer {
+    background-color: #1f1f1f;
+    @apply absolute bottom-0 w-[760px] pb-4
+}
+
+.input-box {
+    @apply min-h-[140px] w-full resize-none overflow-x-auto bg-zinc-800 p-6 px-8 text-lg border-none outline-none border-0 shadow-2xl shadow-orange-400/30 placeholder:text-muted-foreground
+}
+
+.msg {
+    @apply flex space-x-6 relative mb-10 w-[680px]
+}
+
+.msg-content {
+    @apply w-[680px] pt-1 whitespace-pre-wrap break-normal
+}
+
+.markdown-body {
+    @apply w-[680px]
+}
+
+.results {
+    @apply flex space-x-4 w-[680px]
+}
+
+.search-result {
+    @apply flex-1 bg-zinc-700 rounded-md p-3 h-32 overflow-hidden
+}
+
+.avatar {
+    @apply rounded-full p-2 bg-zinc-800 h-fit
+}
+
+.msg-author {
+    @apply font-bold mb-2
+}
+
+.bot-response-controls {
+    @apply flex space-x-4 absolute bottom-0 left-14
+}
+
+.bot-response-controls>.control {
+    @apply text-zinc-300 hover:text-white hover:cursor-pointer
+}
+
+.popover {
+    @apply flex flex-col p-3 rounded bg-white text-black max-w-[400px]
+}
+
+.popover-controls {
+    @apply flex space-x-2
+}
+
+.popover-control {
+    @apply hover:bg-zinc-300 p-1 rounded cursor-pointer
+}
+
+.explanation {
+    @apply mb-0 overflow-y-auto max-h-[100px]
+}
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
+
+.coder-boi {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+
+/* ---------------------------------- */
+/* SYSTEM */
 ::-webkit-scrollbar {
     width: 6px;
 }
@@ -113,58 +247,4 @@ body {
 ::selection {
     background-color: #e0e7ff;
     color: #000;
-}
-
-body {
-    letter-spacing: 0.03rem;
-}
-
-h3 {
-    font-size: 20px;
-}
-
-.container {
-    @apply flex flex-col min-h-screen w-[850px]
-}
-
-.content-container {
-    @apply flex flex-grow text-lg mt-20 md:mt-5
-}
-
-.content {
-    @apply w-full mb-64
-}
-
-.markdown-body {
-    @apply w-[850px]
-}
-
-.navbar {
-    background-color: #1f1f1f;
-    /* color: #FA6608; */
-    @apply flex justify-between items-center w-full py-8 z-40 font-bold
-}
-
-.footer {
-    background-color: #1f1f1f;
-    @apply fixed bottom-0 w-96 z-40 mt-10 w-[850px] pb-4
-}
-
-.input-box {
-    @apply min-h-[140px] w-full resize-none overflow-x-auto bg-zinc-800 p-6 px-8 text-lg border-none outline-none border-0 shadow-2xl shadow-orange-400/30 placeholder:text-muted-foreground
-}
-
-
-.msg {
-    @apply flex items-center relative mb-10 w-[850px] break-words
-}
-
-.avatar {
-    @apply rounded-full p-2 bg-zinc-800 absolute -left-16 top-2
-}
-
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
-
-.coder-boi {
-    font-family: 'JetBrains Mono', monospace;
 }

@@ -1,105 +1,77 @@
-'use client';
+"use client"
 
-import Image from 'next/image'
-import { BotMsg } from '@/components/botmsg'
+import 'react-mosaic-component/react-mosaic-component.css';
+import '@blueprintjs/core/lib/css/blueprint.css';
+import '@blueprintjs/icons/lib/css/blueprint-icons.css';
 
+import { useState } from 'react';
 
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
-import { SendHorizonal, Speech, Zap, User, Square } from 'lucide-react'
+import { MosaicWindow, Mosaic, MosaicZeroState, MosaicNode } from 'react-mosaic-component';
+import { getLeaves, createBalancedTreeFromLeaves, DEFAULT_CONTROLS_WITH_CREATION } from 'react-mosaic-component';
 
-import { useChat } from 'ai/react';
+import ChatUI from '@/components/chatui';
 
 export default function Home() {
+  const [currentNode, setCurrentNode] = useState<MosaicNode<number> | null>(1)
 
-  const { messages, input, handleInputChange, handleSubmit, isLoading, stop } = useChat({
-    api: '/api/chat',
-  });
+  const totalWindowCount = getLeaves(currentNode).length;
 
-  const handleKeyDown = (event: any) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
-      handleSubmit(event);
-    }
+  // - auto arrange
+  const autoArrange = () => {
+    const leaves = getLeaves(currentNode);
+    const balancedTree = createBalancedTreeFromLeaves(leaves) as MosaicNode<number> | null;
+    setCurrentNode(balancedTree);
   };
+  const onChange = (currentNode: MosaicNode<number> | null) => {
+    setCurrentNode(currentNode);
+  };
+
 
   return (
     <>
-      <div className="container ">
-        <div className="navbar">
-          <h3>Lumen</h3>
-        </div>
-        <div className="content-container">
-          <div className="content space-y-10">
-            <div className="chat">
-              <ul>
-                {messages.map((m, index) => (
-                  <li key={index}>
-                    {m.role === 'user' ? (
-                      <div className="msg user-msg ">
-                        <div className="avatar">
-                          <User size={15} />
-                        </div>
-                        <div className="msg-content pt-1 whitespace-pre-wrap">
-                          {m.content}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="msg bot-msg">
-                        <div className="avatar">
-                          <Zap size={15} />
-                        </div>
-                        <div className="msg-content pt-1">
-                          <BotMsg message={m.content} />
-                        </div>
-
-                      </div>
-                    )}
-                  </li>
-                ))}
-
-              </ul>
-            </div>
-          </div >
-        </div >
-        <div className="footer relative">
-          <form onSubmit={handleSubmit}>
-            {/* <Button className="speech rounded-full bg-zinc-800 w-fit py-6 px-4 absolute -left-24 top-10">
-              <Speech size={16} />
-            </Button> */}
-            <Textarea
-              disabled={isLoading}
-              value={input}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}  // Attach the keydown handler here
-              className='input-box'
-              placeholder='Type your message here.'
-            />
-
-            {isLoading ? (
-              < Button className="absolute top-10 right-5 rounded-full py-6 px-4" style={{ background: "#FA6608" }}>
-                <Square
-                  onClick={stop}
-                  size={16}
-                />
-              </Button>
-
-            ) : (
-              <Button className="absolute top-10 right-5 rounded-full py-6 px-4" style={{ background: "#FA6608" }}>
-                <SendHorizonal size={16} />
-              </Button>
-            )
-            }
-          </form>
-          {/* <Button className='absolute -top-14 left-3'
-            onClick={() => browsetheinterwebs()}
-          >
-            Browse
-          </Button> */}
-        </div>
-      </div >
-
+      <Navbar autoArrange={autoArrange} />
+      <Mosaic<number>
+        renderTile={(count, path) => (
+          <Exmp
+            count={count}
+            path={path}
+            totalWindowCount={totalWindowCount}
+          />
+        )}
+        zeroStateView={<MosaicZeroState createNode={() => totalWindowCount + 1} />}
+        value={currentNode}
+        onChange={onChange}
+        blueprintNamespace="bp5"
+      />
     </>
+  )
+};
 
+const Exmp = ({ count, path, totalWindowCount }: any) => {
+  return (
+    <MosaicWindow<number>
+      title={`Lumen Chat`}
+      createNode={() => totalWindowCount + 1}
+      path={path}
+      toolbarControls={DEFAULT_CONTROLS_WITH_CREATION}
+    >
+      <div className='px-10 py-4'>
+        <ChatUI />
+      </div>
+    </MosaicWindow >
+  )
+}
+
+const Navbar = ({ autoArrange }: any) => {
+  return (
+    <div className='overflow-y-hidden px-5 py-2 flex space-x-4 items-center'>
+      <div className='title'>Lumen</div>
+      <div className="controls">
+        <button onClick={() => autoArrange()}>
+          Auto Arrange
+          <i className='bp5-button bp5-minimal bp5-icon-grid-view'></i>
+        </button>
+      </div>
+    </div>
   )
 }

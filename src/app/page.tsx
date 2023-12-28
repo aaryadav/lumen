@@ -1,77 +1,130 @@
-"use client"
+'use client';
 
-import 'react-mosaic-component/react-mosaic-component.css';
-import '@blueprintjs/core/lib/css/blueprint.css';
-import '@blueprintjs/icons/lib/css/blueprint-icons.css';
+import { useState, KeyboardEvent, FormEvent } from 'react';
 
-import { useState } from 'react';
+import { UserMessage } from '@/components/usermessage.jsx'
+import { SearchResultMessage } from '@/components/searchresultmessage.jsx'
+import { BotMessage } from '@/components/botmessage.jsx'
 
-import { MosaicWindow, Mosaic, MosaicZeroState, MosaicNode } from 'react-mosaic-component';
-import { getLeaves, createBalancedTreeFromLeaves, DEFAULT_CONTROLS_WITH_CREATION } from 'react-mosaic-component';
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { Switch } from "@/components/ui/switch"
+import { cn } from "@/lib/utils"
 
-import ChatUI from '@/components/chatui';
 
-export default function Home() {
-  const [currentNode, setCurrentNode] = useState<MosaicNode<number> | null>(1)
+import { SendHorizonal, Speech, Zap, User, Square, Globe } from 'lucide-react'
 
-  const totalWindowCount = getLeaves(currentNode).length;
+import useSSEChat from '@/lib/sse-hook';
+import useBrowse from '@/lib/browse-hook'
+import useThreadStore from '@/app/useStore';
 
-  // - auto arrange
-  const autoArrange = () => {
-    const leaves = getLeaves(currentNode);
-    const balancedTree = createBalancedTreeFromLeaves(leaves) as MosaicNode<number> | null;
-    setCurrentNode(balancedTree);
+export default function ChatUI() {
+
+  const [input, setInput] = useState('');
+  const [browsingMode, setBrowsingMode] = useState(false);
+
+  const { thread, addMessage } = useThreadStore((state) => ({
+    thread: state.thread,
+    addMessage: state.addMessage,
+  }))
+
+  const handleAddToThread = (text: string) => {
+    setInput(input + `\n"${text}"\n`)
   };
-  const onChange = (currentNode: MosaicNode<number> | null) => {
-    setCurrentNode(currentNode);
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      handleSubmit(event as unknown as FormEvent<HTMLFormElement>);
+      setInput('')
+    }
   };
 
+  const { error, isLoading, getModelResponse, stop } = useSSEChat('/api/chat-endpoint');
+  const { webResultsError, loadingWebResults, getWebResults } = useBrowse('/api/chat-endpoint');
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    addMessage({ role: "user", content: input })
+    // Browse
+    browsingMode && await getWebResults(input);
+
+    // Chat
+    setTimeout(getModelResponse, 0);
+  };
 
   return (
     <>
-      <Navbar autoArrange={autoArrange} />
-      <Mosaic<number>
-        renderTile={(count, path) => (
-          <Exmp
-            count={count}
-            path={path}
-            totalWindowCount={totalWindowCount}
-          />
-        )}
-        zeroStateView={<MosaicZeroState createNode={() => totalWindowCount + 1} />}
-        value={currentNode}
-        onChange={onChange}
-        blueprintNamespace="bp5"
-      />
+      <div className="chatui container">
+        <div className='title font-bold text-xl my-8'>Lumen</div>
+        <div className="content-container">
+          <div className="content space-y-10">
+            <div className="chat">
+              <ul className='flex flex-col'>
+                {
+                  thread && thread.map((message, index) => {
+                    const key = index;
+                    switch (message.role) {
+                      case 'user':
+                        return <UserMessage key={key} message={message} />;
+                      case 'search_result':
+                        return Array.isArray(message.content) && <SearchResultMessage key={key} message={message} />
+                      case 'ai':
+                        return <BotMessage key={key} onAddToThread={handleAddToThread} message={message} isLoading={isLoading} />;
+                      default:
+                        return null;
+                    }
+                  })
+                }
+              </ul>
+            </div>
+          </div >
+        </div >
+        <div className="footer relative">
+          <div className='space-x-2 flex'>
+            <div>Browsing Mode</div>
+            <Switch
+              className={cn("data-[state=checked]:bg-white data-[state=unchecked]:bg-zinc-800 mb-3")}
+              checked={browsingMode}
+              onCheckedChange={() => setBrowsingMode(!browsingMode)}
+            />
+          </div>
+          <form
+            onSubmit={handleSubmit}
+          >
+            {/* <Button className="speech rounded-full bg-zinc-800 w-fit py-6 px-4 absolute -left-24 top-10">
+              <Speech size={16} />
+            </Button> */}
+            <Textarea
+              disabled={isLoading}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className='input-box'
+              placeholder='Type your message here.'
+            />
+
+            {isLoading || loadingWebResults ? (
+              // <Button className="absolute top-14 right-5 rounded-full py-6 px-4" style={{ background: "#FA6608" }}>
+              //   <Square
+              //     onClick={stop}
+              //     size={16}
+              //   />
+              // </Button>
+              ""
+
+            ) : (
+              <Button className="absolute top-14 right-5 rounded-full py-6 px-4" style={{ background: "#FA6608" }}>
+                <SendHorizonal size={16} />
+              </Button>
+            )
+            }
+          </form>
+        </div>
+      </div >
+
     </>
-  )
-};
 
-const Exmp = ({ count, path, totalWindowCount }: any) => {
-  return (
-    <MosaicWindow<number>
-      title={`Lumen Chat`}
-      createNode={() => totalWindowCount + 1}
-      path={path}
-      toolbarControls={DEFAULT_CONTROLS_WITH_CREATION}
-    >
-      <div className='px-10 py-4'>
-        <ChatUI />
-      </div>
-    </MosaicWindow >
-  )
-}
-
-const Navbar = ({ autoArrange }: any) => {
-  return (
-    <div className='overflow-y-hidden px-5 py-2 flex space-x-4 items-center'>
-      <div className='title'>Lumen</div>
-      <div className="controls">
-        <button onClick={() => autoArrange()}>
-          Auto Arrange
-          <i className='bp5-button bp5-minimal bp5-icon-grid-view'></i>
-        </button>
-      </div>
-    </div>
   )
 }

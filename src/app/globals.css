@@ -80,9 +80,6 @@
 
 /* LAYOUT */
 
-* {
-    color: #fff;
-}
 
 html,
 body {
@@ -116,7 +113,7 @@ body {
 }
 
 /* -------------------------------------------- */
-#app,
+/* #app,
 .chatui {
     @apply flex;
     width: 100%;
@@ -126,7 +123,7 @@ body {
     height: 900px;
     overflow-y: auto;
     overflow-x: hidden;
-}
+} */
 
 body {
     letter-spacing: 0.03rem;
@@ -155,7 +152,7 @@ h3 {
 
 .footer {
     background-color: #1f1f1f;
-    @apply absolute bottom-0 w-[760px] pb-4
+    @apply fixed bottom-0 w-[760px] pb-4
 }
 
 .input-box {
@@ -199,11 +196,11 @@ h3 {
 }
 
 .popover {
-    @apply flex flex-col p-3 rounded bg-white text-black max-w-[400px]
+    @apply flex flex-col p-3 rounded text-black bg-white max-w-[400px]
 }
 
 .popover-controls {
-    @apply flex space-x-2
+    @apply flex space-x-2 
 }
 
 .popover-control {
@@ -211,7 +208,7 @@ h3 {
 }
 
 .explanation {
-    @apply mb-0 overflow-y-auto max-h-[100px]
+    @apply mb-0 overflow-y-auto max-h-[100px] text-black
 }
 
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');

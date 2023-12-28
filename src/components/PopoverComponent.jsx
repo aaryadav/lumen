@@ -34,7 +34,7 @@ const PopoverComponent = forwardRef(({ children, onAddSelection }, ref) => {
             body: JSON.stringify({ modifiedThread }),
         });
         const data = await simplifiedText.json();
-        console.log(data);
+        console.log(data.response);
         setExplanationText(data.response);
         setIsLoading(false);
     }
